@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 
 class Body extends Component {
-    constructor () {
-        super()
+    constructor ( props ) {
+        super( props ) // inject props to send data to App for header
         // state 
         this.state = {
-            usernames : [] 
+            currentUsername: 'None',
+            usernames: []
         };
     }
 
@@ -30,17 +31,24 @@ class Body extends Component {
         document.getElementById( 'addUsernameButton').disabled = this.state.usernames.includes (newUserName); 
 
     }
+
+    selectUsername = (user) => {
+        this.setState( { currentUsername: user } );
+        this.props.setHeaderUsername( user );
+        console.log('check', user);
+    }
     render() {
         //use map to map this.state.usenames to li elements
         const users =  this.state.usernames.map(
             ( user ) =>  
-                <li key={ user.toString() }> 
+                <li key={ user.toString() } onClick={ () => this.selectUsername( user ) }> 
                 { user }
                 </li>
         );//end map
         return (
             <div>
                 <h1> Add Username </h1>
+                <p> Current user name is { this.state.currentUsername }  </p>
                 <input type="text" placeholder="username" id="usernameIn" onChange={ this.checkForDupe }></input> 
                 <button onClick={ this.addUsername } id="addUsernameButton"> Add Username </button>
                 <ul> 
